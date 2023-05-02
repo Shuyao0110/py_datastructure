@@ -10,12 +10,16 @@ class Solution(object):
         :rtype: int
         """
         # recursion
-        def helper(nums,start,end,target):
+        return self.helper(nums,0,len(nums)-1,target)
+        
+        def helper(self，nums,start,end,target):
             if start>end:
                 return -1
             if nums[start]==target:
                 return start
-        return helper(nums,0,len(nums)-1,target)
+            return self.helper(nums,start+1,len(nums)-1,target)
+        
+        ####################################################################
 
         # recursion + binary search
         self.middle = 0
@@ -23,6 +27,7 @@ class Solution(object):
             if start > end:
                 self.middle = -1
                 return
+            #如果（start+end）/2太大，可能会超出范围，这种写法比较周全
             self.middle = start+(end-start)//2
             if nums[self.middle] > target:
                 helper(nums, start, self.middle-1, target)
@@ -31,6 +36,8 @@ class Solution(object):
         helper(nums, 0, len(nums)-1, target)
         return self.middle
 
+        ####################################################################
+    
         # itertation
         start = 0
         end = len(nums)-1
