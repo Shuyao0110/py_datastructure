@@ -5,23 +5,27 @@ class Solution(object):
         :type target: int
         :rtype: List[int]
         """
-        # dic_nums={}
-        # for i in range (len(nums)):
-        #     dic_nums[nums[i]]=i
-        # for j in range (len(nums)):
-        #     res=target-nums[j]
-        #     if dic_nums.get(res):
-        #         if dic_nums[res]==j:
-        #             continue
-        #         return [j,dic_nums[res]]
+        #创建字典
+        dic_nums={}
+        for i in range (len(nums)):
+            dic_nums[nums[i]]=i
+        for j in range (len(nums)):
+            res=target-nums[j]
+            if dic_nums.get(res):
+                #排除这个元素本身
+                if dic_nums[res]==j:
+                    continue
+                return [j,dic_nums[res]]
+        
+        #哈希表法
+        harshset=set()
+        for num in nums:
+            if target-num in harshset:
+                return num, target-num
+            harshset.add(num)
+        return None
 
-        # harshset=set()
-        # for num in nums:
-        #     if target-num in harshset:
-        #         return num, target-num
-        #     harshset.add(num)
-        # return None
-
+        #双指针法：先给数组排序提高效率
         if nums is None:
             return None
         # enumerate给liest内的元素加上索引
