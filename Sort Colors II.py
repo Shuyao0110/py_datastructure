@@ -3,6 +3,8 @@
 # n elements including k kinds of colors
 # sort the elements by colors
 # return a list in color sequence, such as [1,1,3,5,5,5,6]
+# 四根指针，分别是颜色的pivot（由from和to决定，时间复杂度logk）
+# list的左右指针负责调换，时间复杂度n
 
 class Solution:
     def sortColors(self, colors, k):
