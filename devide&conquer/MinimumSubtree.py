@@ -34,5 +34,5 @@ class Solution:
         if left_minimum == min(left_minimum, right_minimum, sum_of_root):
             return left_minimum, left_subtree, sum_of_root
         if right_minimum == min(left_minimum, right_minimum, sum_of_root):
-            return right_minimum, right_subtree, sum_of_root
+            return right_sum, right_sum, sum_of_root
         return sum_of_root, root, sum_of_root
