@@ -1,0 +1,158 @@
+# 1650. Lowest Common Ancestor of a Binary Tree III
+# Given two nodes of a binary tree p and q, 
+# return their lowest common ancestor (LCA).
+# Each node will have a reference to its parent node. 
+# According to the definition of LCA on Wikipedia: 
+# "The lowest common ancestor of two nodes p and q in a tree T 
+# is the lowest node that has both p and q as descendants 
+# (where we allow a node to be a descendant of itself)."
+
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
+        self.parent = None
+"""
+
+class Solution(object):
+    def lowestCommonAncestor(self, p, q):
+        """
+        :type node: Node
+        :rtype: Node
+        """
+        parent_set = set()
+        curr = p
+        while curr is not None:
+            parent_set.add(curr)
+            curr = curr.parent
+
+        curr = q
+        while curr is not None:
+            if curr in parent_set:
+                return curr
+            curr = curr.parent
+        return None
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+node5 = TreeNode(5)
+node3 = TreeNode(3)
+node2 = TreeNode(2)
+node1 = TreeNode(1)
+node2.left=node1
+node2.right=node3
+node3.right=node5
+
+# 236. Lowest Common Ancestor of a Binary Tree
+# Given a binary tree, find the lowest common ancestor (LCA) 
+# of two given nodes in the tree.
+# According to the definition of LCA on Wikipedia: 
+# “The lowest common ancestor is defined between two nodes p and q 
+# as the lowest node in T that has both p and q as descendants 
+# (where we allow a node to be a descendant of itself).”
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution(object):
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        # p是q的祖先/q是p的祖先
+        # p和q在一个根的左右子树上
+        if root is None:
+            return None
+        if root==p or root==q:
+            return root
+        left=self.lowestCommonAncestor(root.left,p,q)
+        right=self.lowestCommonAncestor(root.right,p,q)
+
+        if left and right:
+            return root
+        if left: 
+            return left
+        if right:
+            return right
+        return None
+
+my_solution=Solution()
+my_solution.lowestCommonAncestor(node2,node1,node5)
+
+# 298. Binary Tree Longest Consecutive Sequence II
+# 找最长增序+1的长度
+# Given the root of a binary tree,
+# return the length of the longest consecutive sequence path.
+# A consecutive sequence path is a path where the values increase by one along the path.
+# Note that the path can start at any node in the tree, 
+# and you cannot go from a node to its parent in the path.
+# Input: root = [1,null,3,2,4,null,null,null,5]
+# Output: 3
+# Explanation: Longest consecutive sequence path is 3-4-5, so return 3.
+
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def longestConsecutive(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        return self.helper(float('-inf'),root,float('-inf'),0)
+
+    def helper(self,pre_val,root,curr_length,max_length):
+        if root is None:
+            return max_length
+        if root.val==pre_val+1:
+            curr_length+=1
+        else:
+            curr_length=1
+        max_length=max(curr_length,max_length)
+        left_max=self.helper(root.val,root.left,curr_length,max_length)
+        right_max=self.helper(root.val,root.right,curr_length,max_length)
+        return max(left_max,right_max)
+
+# 549. Binary Tree Longest Consecutive Sequence II
+# Given the root of a binary tree, 
+# return the length of the longest consecutive path in the tree.
+# A consecutive path is a path where the values of the consecutive nodes in the path differ by one. 
+# This path can be either increasing or decreasing.
+# For example, [1,2,3,4] and [4,3,2,1] are both considered valid, 
+# but the path [1,2,4,3] is not valid.
+# On the other hand, the path can be in the child-Parent-child order, 
+# where not necessarily be parent-child order.
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def longestConsecutive(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+    def helper(self,pre_val,root,curr_length,max_length):
+        if root is None:
+            return max_length
+        if pre_val 
