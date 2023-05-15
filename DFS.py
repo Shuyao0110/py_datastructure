@@ -75,6 +75,7 @@ class Solution(object):
     def DFS(self,A,index,k,target,subset,subsets):
         if k==0 and target==0:
             sebsets.append(list(subset))
+            # 如果题目是有正有负，不限制元素个数，就不需要return
             return
         if k==0 or target<=0:
             return
@@ -110,16 +111,76 @@ class Solution(object):
         # 去重：减少重复的组合
         # 排序：要求返回值是非降序的
         unique_sorted_nums=sorted(list(set(candidates)))
-        self.DFS(unique_sorted_nums,0,[].target,results)
+        self.DFS(unique_sorted_nums,0,[],target,results)
         return results
 
-        def DFS(self,nums,index,current_result,remain_target,results):
-            if remain_target==0:
-                return results.append(list(current_result))
-            for i in range(index,len(nums)):
-                if remain_target<nums[i]:
-                    return
-                    current_result.append(nums[i])
-                    # 这里传入index是i而不是i+1，因为下一层的dfs可以重复使用当前位置的数字
-                    self.DFS(nums,i,current_result,remain_target-nums[i],results)
-                    current_result.pop()
+    def DFS(self,nums,index,current_result,remain_target,results):
+        if remain_target==0:
+            return results.append(list(current_result))
+        for i in range(index,len(nums)):
+            if remain_target<nums[i]:
+                return
+            current_result.append(nums[i])
+            # 这里传入index是i而不是i+1，因为下一层的dfs可以重复使用当前位置的数字
+            self.DFS(nums,i,current_result,remain_target-nums[i],results)
+            current_result.pop()
+
+class Sloution:
+    def permute(self,nums):
+        if nums is None:
+            return []
+        results=[]
+        used=set()
+        self.build_permutation()
+        return results
+    
+    def build_permutation(self,nums,used,path,results):
+        if len(nums)==len(path):
+            # 复制path里的内容append到results后面
+            results.append(path[:])
+            return
+        for i in range(len((nums))):
+            if i in used:
+                continue
+            path.append(nums[i])
+            used.add(i)
+            self.build_permutation(nums,used,path,results)
+            used.remove(i)
+            path.pop()
+    
+# 47. Permutations II
+# Given a collection of numbers, nums, that might contain duplicates, 
+# return all possible unique permutations in any order.
+# Input: nums = [1,1,2]
+# Output:
+# [[1,1,2],
+#  [1,2,1],
+#  [2,1,1]]
+class Solution(object):
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        if nums is None:
+            return
+        chars=sorted(list(nums))
+        visited=[False]*len(chars)
+        permutations=[]
+        self.DFS(chars,visited,[],permutations)
+        return permutations
+
+    def DFS(self,chars,visited,permutation,permutations):
+        if len(permutation)==len(chars):
+            permutations.append('',join(permutation))
+            return
+        for i in range(len(chars)):
+            if visited[i]:
+                continue
+            if i>0 and chars[i-1]==chars[i] and not visited[i-1]:
+                continue
+            visited[i]=True
+            permutation.append(chars[i])
+            self.DFS(chars,visited,permutation,permutations)
+            permutation.pop()
+            visited[i]=False
