@@ -125,6 +125,7 @@ class Solution(object):
             self.DFS(nums,i,current_result,remain_target-nums[i],results)
             current_result.pop()
 
+# [1,2,3]的不同排列
 class Sloution:
     def permute(self,nums):
         if nums is None:
@@ -164,23 +165,101 @@ class Solution(object):
         """
         if nums is None:
             return
-        chars=sorted(list(nums))
-        visited=[False]*len(chars)
+        nums.sort()
+        visited=[False]*len(nums)
         permutations=[]
-        self.DFS(chars,visited,[],permutations)
+        self.DFS(nums,visited,[],permutations)
         return permutations
 
-    def DFS(self,chars,visited,permutation,permutations):
-        if len(permutation)==len(chars):
-            permutations.append('',join(permutation))
+    def DFS(self,nums,visited,permutation,permutations):
+        if len(permutation)==len(nums):
+            permutations.append(list(permutation))
             return
-        for i in range(len(chars)):
+        for i in range(len(nums)):
+            # 同一个位置上的字符不能重复用
             if visited[i]:
                 continue
-            if i>0 and chars[i-1]==chars[i] and not visited[i-1]:
+            # 和上一个重复的字符只有上一个被访问才能被用
+            if i>0 and nums[i-1]==nums[i] and not visited[i-1]:
                 continue
             visited[i]=True
-            permutation.append(chars[i])
-            self.DFS(chars,visited,permutation,permutations)
+            permutation.append(nums[i])
+            self.DFS(nums,visited,permutation,permutations)
             permutation.pop()
             visited[i]=False
+    
+# 79. Word Search
+# Given an m x n grid of characters board and a string word, 
+# return true if word exists in the grid.
+# The word can be constructed from letters of sequentially adjacent cells, 
+# where adjacent cells are horizontally or vertically neighboring. 
+# The same letter cell may not be used more than once.
+# Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], 
+# word = "ABCCED"
+# Output: true
+
+
+# 212. Word Search II
+# Given an m x n board of characters and a list of strings words, 
+# return all words on the board.
+# Each word must be constructed from letters of sequentially adjacent cells, 
+# where adjacent cells are horizontally or vertically neighboring. 
+# The same letter cell may not be used more than once in a word.
+DIRECTIONS=[(0,-1),(0,1),(-1,0),(1,0)]
+class Solution(object):
+    def findWords(self, board, words):
+        """
+        :type board: List[List[str]]
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        if board is None or len(board)==0:
+            return []
+        word_set=set(words)
+        prefix_set=set()
+        for word in words:
+            for i in range(len(word)):
+                prefix_set.add(word[:i+1])
+
+        result_set=set()
+
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                self.search(
+                    board,
+                    i,
+                    j,
+                    board[i][j],
+                    word_set,
+                    prefix_set,
+                    set([(i,j)]),
+                    result_set,
+                )
+        return list(result_set)
+    
+    def search(self,board,x,y,word,word_set,prefix_set,visited,result_set):
+        if word not in prefix_set:
+            return
+        
+        if word in word_set:
+            result_set.add(word)
+        for dx,dy in DIRECTIONS:
+            x_=x+dx
+            y_=y+dy
+            if not self.inside(board,x_,y_) or (x_,y_) in visited:
+                continue
+            visited.add((x_,y_))
+            self.search(
+                board,
+                x_,
+                y_,
+                word+board[x_][y_],
+                word_set,
+                prefix_set,
+                visited,
+                result_set,
+            )
+            visited.remove((x_,y_))
+
+    def inside(self,board,x,y):
+        return 0<=x<len(board) and 0<=y<len(board[0])
