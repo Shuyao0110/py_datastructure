@@ -263,3 +263,51 @@ class Solution(object):
 
     def inside(self,board,x,y):
         return 0<=x<len(board) and 0<=y<len(board[0])
+
+# 785. Is Graph Bipartite?
+# There is an undirected graph with n nodes, where each node is numbered 
+# between 0 and n - 1. You are given a 2D array graph, where graph[u] is 
+# an array of nodes that node u is adjacent to. More formally, for each v 
+# in graph[u], there is an undirected edge between node u and node v. 
+# The graph has the following properties: There are no self-edges (graph[u] 
+# does not contain u). There are no parallel edges (graph[u] does not contain 
+# duplicate values). If v is in graph[u], then u is in graph[v] (the graph is 
+# undirected). The graph may not be connected, meaning there may be two nodes 
+# u and v such that there is no path between them. A graph is bipartite if 
+# the nodes can be partitioned into two independent sets A and B such that 
+# every edge in the graph connects a node in set A and a node in set B.
+# Return true if and only if it is bipartite.
+# Input: graph = [[1,2,3],[0,2],[0,1,3],[0,2]]
+# Output: false
+# Explanation: There is no way to partition the nodes into two independent sets 
+# such that every edge connects a node in one and a node in the other.
+class Solution(object):
+    UNCOLORED, RED, GREEN =0,1,2
+    def isBipartite(self, graph):
+        """
+        :type graph: List[List[int]]
+        :rtype: bool
+        """
+    node_count=len(graph)
+    node_color=[self.UNCOLORED]*node_count
+    for node in range(node_count):
+        if node_color[node]==self.UNCOLORED:
+            if not self.dfs(node,self.RED,node_color,graph):
+                return False
+    return True
+
+def dfs(self,node:int,color:int,node_color:list[int],graph:list[list(int)]):
+    # 给当前节点上色
+    node_color[node]=color
+    neighbor_color=self.GREEN if color == self.RED else self.RED
+    # 遍历当前节点的所有邻居
+    for neighbor_node in graph[node]:
+        if node_color[neighbor_node] ==self.UNCOLORED:
+            # 若邻居没有颜色，则dfs进行染色
+            if not self.dfs(neighbor_node,neighbor_color,node_color,graph):
+                return False
+        # 邻居节点的颜色和当前节点冲突
+        elif node_color[neighbor_node]!=neighbor_color:
+            return False
+    # 所有邻居节点都被遍历完，没有冲突，没有空色，返回true
+    return True
