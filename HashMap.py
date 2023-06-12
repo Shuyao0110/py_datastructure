@@ -156,13 +156,15 @@ class LRUCache(object):
         :type capacity: int
         """
         self.capacity = capacity
-        self.dummy= LinkedNode()
+        self.dummy = LinkedNode()
         self.tail = self.dummy
-        self.key_to_prev= {}
+        self.key_to_prev = {}
     
-    def push_back(self,capacity):
+    # 把新节点推入链表的尾部，并将其值写入映射表
+    def push_back(self,node):
         self.key_to_prev[node.key]=self.tail
         self.tail.next=node
+        self.tail=node
         
     def get(self, key):
         """
@@ -171,9 +173,11 @@ class LRUCache(object):
         """ 
         if key not in self.key_to_prev:
             return -1
+        # 刚刚被访问过的节点需要移动到链表的尾部
         self.kick(key)
         return self.tail.value
 
+    # 加新节点
     def put(self, key, value):
         """
         :type key: int
@@ -194,7 +198,9 @@ class LRUCache(object):
         self.dummy.next = head.next
         self.key_to_prev[head.next.key] = self.dummy
 
+    #  将目标节点从原来位置移除，并连接到尾部
     def kick(self,key):
+        # 根据映射表找到前一个节点和目标节点
         prev = self.key_to_prev[key]
         key_node=prev.next
         if key_node == self.tail:
@@ -204,9 +210,32 @@ class LRUCache(object):
         key_node.next = None
         self.push_back(key_node)
         
-
-
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
 # param_1 = obj.get(key)
 # obj.put(key,value)
+
+# 有序字典：OrderDdict
+# 类似数组的字典，保留键值对的顺序
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self,capacity):
+        self.capacity = capacity
+        self.cache = OrderedDict()
+    
+    def get(self, key):
+        if key not in cache:
+            return -1
+        # 把被访问的键值对取出，再放回cache的末尾
+        value = self.cache.pop(key)
+        self.cache[key]=value
+        return value
+    
+    def set(self, key, value):
+        if key in self.cache:
+            self.cache.pop(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            # last = True时pop规则是FILO, last = False时FIFO
+            self.cache.popitem(last=False)
